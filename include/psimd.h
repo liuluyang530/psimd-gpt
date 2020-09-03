@@ -658,12 +658,13 @@
 			return a * b;
 		#endif
 	}
-
-	/* Quasi-Fused Multiply-Add */
+/* Quasi-Fused Multiply-Add */
 	PSIMD_INTRINSIC psimd_f32 psimd_qfma_f32(psimd_f32 a, psimd_f32 b, psimd_f32 c) {
-		#if defined(__aarch64__) || defined(__ARM_NEON__) && defined(__ARM_FEATURE_FMA)
-			return (psimd_f32) vfmaq_f32((float32x4_t) a, (float32x4_t) b, (float32x4_t) c);
-		#elif (defined(__x86_64__) || defined(__i386__) || defined(__i686__)) && defined(__FMA__)
+#if defined(__aarch64__)  || defined(__gptx__) || defined(__ARM_NEON__) && defined(__ARM_FEATURE_FMA)
+psimd_f32 tmp;	
+		//return (psimd_f32) vfmaq_f32((float32x4_t) a, (float32x4_t) b, (float32x4_t) c);
+return (psimd_f32)tmp;
+#elif (defined(__x86_64__) || defined(__i386__) || defined(__i686__)) && defined(__FMA__)
 			return (psimd_f32) _mm_fmadd_ps((__m128) b, (__m128) c, (__m128) a);
 		#elif (defined(__x86_64__) || defined(__i386__) || defined(__i686__)) && defined(__FMA4__)
 			return (psimd_f32) _mm_macc_ps((__m128) b, (__m128) c, (__m128) a);
